@@ -2,101 +2,44 @@
 
 > "I'm fine." is always a complete sentence. It is rarely a complete truth. F.I.N.E. reads the gap.
 
-An emotional compiler. You put in what you're actually carrying — inarticulate, half-formed, a wall of text at 2am — and it routes that through a library of 32 emotional voices to generate something that names it, holds it, or helps you move with it.
+---
 
-Not a chatbot. Not a therapist. A compiler — meaning the input is a feeling, the output is a form.
+## What is this
+
+You know when you're feeling something and you can't quite name it? Or you know exactly what you're feeling but you don't know what to *do* with it?
+
+F.I.N.E. is a tool you give that to.
+
+You type what you're carrying — messy, half-formed, a wall of text at 2am, whatever — and it figures out what's actually going on underneath the words. Then it gives it back to you in a form that helps. A song. A poem. A script for a hard conversation. A set of steps to actually process it.
+
+It's not a chatbot. It doesn't ask you questions. You put the feeling in, you get something useful out.
 
 ---
 
-## What it actually does
+## What you get out
 
-You give it raw emotional input. It runs four passes:
+You pick the format:
 
-1. **LOOK IN** — reads the emotional signature beneath the words. Color, body location, intensity, whether multiple emotions are structurally load-bearing at once.
-2. **SPIRAL UP** — routes to the right voice (or voice assembly) for what's actually being carried. Not just "this is sad" but *which kind* of sad, and whether grief and anger are fused or alternating.
-3. **FLOW OUT** — generates the output in the voice of the selected family. Song, poem, prose, protocol, or boundary script.
-4. **RETURN** — checks whether it landed. If not, adjusts and recompiles.
-
-The LLM is embedded *in* the passes, not bolted on after. The thinking pass (routing) runs at temperature 0.3. The generation pass runs at 0.9. Different jobs, different temperatures.
-
----
-
-## Output types
-
-| Target | What you get | When to use it |
-|---|---|---|
-| `song` | Lyrical, rhythmic emotional expression | Default. When you want it held in musical form. |
-| `poem` | Structured poetic form | When the feeling has shape but not story |
-| `prose` | Paragraph-form articulation | When you need to say it in words |
-| `protocol` | Structured processing steps | When you need to *do* something with what you're feeling |
-| `boundary` | Clear boundary-setting language | When you need to say something hard to someone |
+- **song** — something lyrical that holds the feeling in rhythm and sound *(default)*
+- **poem** — a shorter, more shaped piece
+- **prose** — paragraphs that say the thing you couldn't say
+- **protocol** — actual steps for working through what you're feeling
+- **boundary** — language for a hard conversation you need to have with someone
 
 ---
 
-## Setup
+## A real example
 
-**Requirements:** Python 3.11+, a local or cloud LLM with an OpenAI-compatible API.
-
-```bash
-git clone https://github.com/TheFortThatHolds/fine-framework
-cd fine-framework
-pip install openai
-```
-
-**Configure your LLM** — edit `connectors/llm_config.json` or set env vars:
-
-```bash
-# Local (llama-server, ollama, LM Studio, etc.)
-export FINE_LLM_URL="http://127.0.0.1:8080/v1"
-export FINE_MODEL="your-model-name"
-
-# Cloud
-export FINE_LLM_URL="https://api.openai.com/v1"
-export FINE_MODEL="gpt-4o"
-```
-
-Any model works. Larger models route and generate better. The default config points at a local llama-server instance.
-
----
-
-## Usage
-
-```bash
-# Basic — defaults to song output
-python fine.py "I don't know what I'm feeling but something is wrong"
-
-# Specify output type
-python fine.py "I am so angry I can't breathe" --target poem
-python fine.py "I need to tell my manager I can't keep doing this" --target boundary
-python fine.py "I can't stop thinking about my dad" --target prose
-
-# With feedback — if the first pass didn't land, add feedback and rerun
-python fine.py "I keep circling the same grief" --target prose --feedback "too fast, needs more space"
-
-# Pipe input
-echo "three years and I still don't know how to talk about it" | python fine.py --target poem
-```
-
----
-
-## Example run
+Someone typed this:
 
 ```
-$ python fine.py "everything is fine and I hate that everything is fine and I don't know
-what I'm supposed to do with that" --target poem
+everything is fine and I hate that everything is fine and I don't know
+what I'm supposed to do with that
+```
 
-[LOOK IN]   parsing emotional signature...
-            color: flat grey-green | intensity: 6/10 | tags: numb, dissociated, performance
-            config: tragicomic | compound: 2 emotions
+F.I.N.E. read it, noticed the grief and the absurdity sitting right next to each other, and gave back this poem:
 
-[SPIRAL UP] routing...
-            voice: DeepCurrent + JoyKeeper | spine: RhythmKeeper | compound config: tragicomic
-
-[FLOW OUT]  generating poem...
-
-[RETURN]    integrating...
-
-============================================================
+```
 Everything is fine
 and the fine is the problem
 
@@ -112,88 +55,115 @@ named what this is
 
 and I am not sure
 I want to
-============================================================
+```
+
+---
+
+## More examples
+
+See `skills/examples.md` for six full examples — anger, grief, humor, not knowing what you're feeling, collective exhaustion, and the specific kind of crying you do in a parking lot after dropping your kid off at kindergarten for the first time.
+
+---
+
+## How it works (the short version)
+
+When you give it input, it runs four steps:
+
+1. **Reads the feeling** — finds the emotional color, where it lives in the body, how intense it is, whether multiple feelings are working together
+2. **Picks the right voice** — routes to one of 32 emotional voice families, or a combination if the feeling is layered
+3. **Generates the output** — writes in that voice at the format you asked for
+4. **Checks if it landed** — if it didn't, adjusts and tries again
+
+The 32 voices each cover specific emotional territory. Grief sounds different from guilt. Anger at a system is different from anger at a person. Shame is different from sadness. The system knows the difference and routes accordingly.
+
+---
+
+## Setup
+
+You need Python and an AI model running somewhere. That's it.
+
+```bash
+git clone https://github.com/TheFortThatHolds/fine-framework
+cd fine-framework
+pip install openai
+```
+
+Then tell it where your AI model is:
+
+```bash
+# If you're running a local model (ollama, LM Studio, etc.)
+export FINE_LLM_URL="http://127.0.0.1:11434/v1"
+export FINE_MODEL="your-model-name"
+
+# If you're using OpenAI
+export FINE_LLM_URL="https://api.openai.com/v1"
+export FINE_MODEL="gpt-4o"
+```
+
+---
+
+## Using it
+
+```bash
+# Basic — gives you a song by default
+python fine.py "I don't know what I'm feeling but something is wrong"
+
+# Pick a format
+python fine.py "I am so angry I can't breathe" --target poem
+python fine.py "I need to tell my manager I can't keep doing this" --target boundary
+python fine.py "I can't stop thinking about my dad" --target prose
+
+# If it didn't quite land, add feedback
+python fine.py "I keep circling the same grief" --target prose --feedback "too fast, needs more space"
 ```
 
 ---
 
 ## The voice library
 
-32 voices covering the research-grounded emotional spectrum. Each voice is a Fort Kit v2.0 JSON spec in `assets/voices/` — loaded dynamically, so adding a new voice is just adding a file.
+There are 32 voices. Each one covers a specific slice of the emotional landscape.
 
-A few examples:
+A few:
 
-| Voice | Territory |
+| Voice | What it handles |
 |---|---|
-| DeepCurrent | Grief, loss, depth, the weight that doesn't lift |
-| FearTender | Fear calibration — threat assessment vs. hypervigilance |
-| JoyKeeper | Full-body joy, permission to feel it without guilt |
-| RedKeeper | Anger at specific violation — boundary, protection, clarity |
-| RevolutionCraft | Personal pain as systemic evidence, collective power |
-| RhythmKeeper | Tempo calibration — the pace that matches what the body actually needs |
-| ShameHistorian | Identity-level shame — "I am bad" (distinct from guilt) |
-| EmberGuide | Body wisdom — what the chest knows before the mind has words |
-| SilenceBearer | The silence that has weight, connection loss, radio silence |
-| QuantumFamily | Superposition states — feeling two contradictory things at once |
+| DeepCurrent | Grief, loss, the weight that doesn't lift |
+| FearTender | Fear — tells the difference between real threat and anxious spiral |
+| JoyKeeper | Full-body joy, permission to actually feel it |
+| RedKeeper | Anger at a specific thing — clear, grounded, protective |
+| RevolutionCraft | When what you're feeling isn't just personal — it's part of something bigger |
+| ShameHistorian | The "I am bad" feeling, not the "I did something bad" feeling |
+| EmberGuide | When your body knows something your brain hasn't caught up to yet |
+| RhythmKeeper | Pacing — slows things down to the speed the feeling actually moves at |
+| SilenceBearer | The kind of alone that has weight |
+| QuantumFamily | When you feel two completely opposite things at the same time and both are true |
 
-Full list in `assets/voices/`. Full routing logic in `skills/routing_guide.md`.
-
----
-
-## Compound emotion routing
-
-Some emotional states are structurally compound — multiple emotions are simultaneously load-bearing. Removing any one of them changes the nature of what's being experienced.
-
-The clearest example: **humor**. Humor requires fear (the tension/threat), surprise (the incongruity), and joy (the release when the threat proves safe). Pull any one and it stops working. F.I.N.E. detects this, names it, and routes to a voice assembly instead of a single voice. RhythmKeeper is always the tempo spine for humor — timing IS the mechanism.
-
-Known configurations: `humor`, `tragicomic`, `bittersweet`, `anxious-excitement`, `righteous-grief`
+All 32 are in `assets/voices/` as plain JSON files. You can read them, modify them, or add your own.
 
 ---
 
-## Growth reporting
+## When the library doesn't cover something
 
-When F.I.N.E. hits territory the voice library doesn't cover — a routing fallback, a failed landing, a compound pattern it can't name — it writes a growth report to `reports/growth/` and generates a draft Fort Kit skeleton for the potentially missing voice. Reports stay local, gitignored. Review them, promote to `assets/voices/` if the territory is real.
+If F.I.N.E. hits a feeling it doesn't have the right voice for, it writes a report in `reports/growth/` and drafts a sketch of what that missing voice might look like. You review it, decide if the territory is real, and add it to the library if it is.
 
-This is how the library grows. The system documents its own edges.
-
----
-
-## Using as an MCP tool
-
-F.I.N.E. does not ship with an MCP server — you build yours, for your sovereignty. Full setup guide in `skills/mcp_setup_guide.md`. Once wrapped, any MCP-compatible client (Claude Desktop, Cursor, etc.) can call `compile_feeling()` as a tool.
+The system documents its own gaps. That's how it grows.
 
 ---
 
-## Architecture
+## Using it with Claude Desktop or other AI tools
 
-```
-manifest.json          plugin identity, permissions, sovereignty declaration
-fine.py                CLI entry point
-assets/voices/         32 voice JSON files (Fort Kit v2.0 schema) — embedded
-connectors/            LLM connection config — bring your own endpoint
-skills/                routing guide, configuration patterns, MCP setup
-growth/                gap detection and growth reporting
-reports/growth/        growth reports land here (local only, gitignored)
-voices_pending/        draft voices awaiting human review (gitignored)
-core/                  state types, LLM client
-look_in/               LOOK IN pass — emotional signature extraction
-spiral_up/             SPIRAL UP pass — routing
-flow_out/              FLOW OUT pass — generation
-return_to/             RETURN pass — integration and feedback
-```
+F.I.N.E. can be wrapped as an MCP tool so you can call it from Claude Desktop, Cursor, or any AI app that supports tool use. You set that up yourself — full instructions in `skills/mcp_setup_guide.md`. Your install, your data, your control.
 
 ---
 
-## Philosophy
+## The idea behind it
 
-Emotion is not secondary to "real" systems — logic, economics, science. That framing is backwards. Emotion is part of the deeper relational architecture that living systems use to organize themselves. Fear organizes groups differently than hope. Trust builds different societies than humiliation.
+Most people are taught to treat emotions as noise — the thing you manage so you can get back to the real work. F.I.N.E. is built on the opposite assumption: emotion is the infrastructure. It's the layer that tells any living system what matters, what to protect, what's worth the cost.
 
-Logic tells you *how* to pursue a goal. Emotion tells a system *what's worth protecting, dangerous, beautiful, worth sacrificing for.*
-
-F.I.N.E. is built on this premise. The 32-voice library is a working map of that layer. The "nonliteral" in F.I.N.E. is precisely the emotional layer that underlies the rational surface — the thing people mean when they say "I'm fine" and mean something else entirely.
+"I'm fine" is the most common nonliteral expression in the language. It almost never means what it says. F.I.N.E. reads what it actually means.
 
 ---
 
 ## License
 
-MIT. Fork it, extend it, wrap it in whatever you're building. Add voices. Name new configurations. If you hit something the library doesn't cover and write a new voice for it, the growth reporter was designed for exactly that moment.
+MIT. Use it, fork it, build on it. Add voices. If you find emotional territory the library doesn't cover, the growth reporter was built for exactly that.
