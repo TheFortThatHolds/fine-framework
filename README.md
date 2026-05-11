@@ -164,6 +164,12 @@ Most people are taught to treat emotions as noise — the thing you manage so yo
 
 ---
 
+## Going deeper
+
+→ [TECHNICAL.md](TECHNICAL.md) — pipeline architecture, data structures, schema spec, how to add voices and configurations
+
+---
+
 ## License
 
 MIT. Use it, fork it, build on it. Add voices. If you find emotional territory the library doesn't cover, the growth reporter was built for exactly that.
