@@ -1,0 +1,16 @@
+{
+  "note": "Point endpoint at any OpenAI-compatible API. Local (llama-server, ollama) or cloud (OpenAI, Anthropic via proxy, etc.). F.I.N.E. is endpoint-agnostic.",
+  "endpoint": "http://127.0.0.1:8080/v1",
+  "endpoint_env_override": "FINE_LLM_URL",
+  "model": "gemma4e4b",
+  "model_env_override": "FINE_MODEL",
+  "decide_temperature": 0.3,
+  "generate_temperature": 0.9,
+  "max_tokens": 4096,
+  "examples": {
+    "local_ollama": "http://127.0.0.1:11434/v1",
+    "local_llamacpp": "http://127.0.0.1:8080/v1",
+    "openai": "https://api.openai.com/v1",
+    "anthropic_proxy": "see skills/mcp_setup_guide.md"
+  }
+}

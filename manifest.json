@@ -1,0 +1,26 @@
+{
+  "name": "F.I.N.E.",
+  "full_name": "Framework for Interpreting Nonliteral Expression",
+  "version": "1.0.0",
+  "description": "An emotional compiler. Four passes: LOOK IN → SPIRAL UP → FLOW OUT → RETURN. Reads what people actually carry, not what they literally say.",
+  "license": "MIT",
+  "entry_point": "fine.py",
+  "assets": {
+    "voices": "assets/voices/"
+  },
+  "connectors": {
+    "llm": "connectors/llm_config.json"
+  },
+  "growth": {
+    "reports_dir": "reports/growth/",
+    "pending_dir": "voices_pending/",
+    "allow_self_extension": false
+  },
+  "permissions": [
+    "read:assets/voices/",
+    "write:reports/growth/",
+    "write:voices_pending/",
+    "connect:llm_endpoint"
+  ],
+  "sovereignty": "This package calls nothing you did not configure. No telemetry. No callbacks. No hosted dependencies. Bring your own LLM."
+}
